@@ -1,0 +1,8 @@
+# ── Node.js Backend ──────────────────────────────────────────
+FROM node:20-slim
+WORKDIR /app
+COPY src/package*.json ./src/
+RUN cd src && npm install
+COPY src ./src
+EXPOSE 3000
+CMD ["node", "src/server.js"]

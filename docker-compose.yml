@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # ── PostgreSQL ──────────────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: student-db
+    restart: always
+    environment:
+      POSTGRES_DB: student_performance
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/config/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  # ── FastAPI ML Service ─────────────────────────────────────
+  ml-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.ml
+    container_name: ml-predict-api
+    ports:
+      - "8000:8000"
+    restart: always
+    depends_on:
+      - db
+
+  # ── Node.js Backend ────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: student-node-api
+    ports:
+      - "3000:3000"
+    restart: always
+    environment:
+      - PORT=3000
+      - DB_USER=postgres
+      - DB_HOST=db
+      - DB_NAME=student_performance
+      - DB_PASSWORD=password
+      - DB_PORT=5432
+      - JWT_SECRET=your_super_secret_jwt_key
+      - ML_API_URL=http://ml-api:8000
+    depends_on:
+      - db
+      - ml-api
+
+  # ── React Frontend ─────────────────────────────────────────
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: student-react-frontend
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
