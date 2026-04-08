@@ -29,28 +29,28 @@ CREATE TABLE student_performance (
     user_id             INTEGER REFERENCES users(id) ON DELETE CASCADE,
 
     -- Demographics
-    age                 INTEGER DEFAULT 18,
-    ses_quartile        INTEGER DEFAULT 2,     -- 1-4
+    age                 INTEGER DEFAULT 18 CHECK (age >= 12 AND age <= 30),
+    ses_quartile        INTEGER DEFAULT 2 CHECK (ses_quartile >= 1 AND ses_quartile <= 4),
     parental_education  VARCHAR(50), 
     school_type         VARCHAR(50), 
 
     -- Core Subjects (Scores 0-100)
-    math                NUMERIC(5,2) DEFAULT 0,
-    english             NUMERIC(5,2) DEFAULT 0,
-    computer            NUMERIC(5,2) DEFAULT 0,
-    physics             NUMERIC(5,2) DEFAULT 0,
-    chemistry           NUMERIC(5,2) DEFAULT 0,
-    biology             NUMERIC(5,2) DEFAULT 0,
+    math                NUMERIC(5,2) DEFAULT 0 CHECK (math >= 0 AND math <= 100),
+    english             NUMERIC(5,2) DEFAULT 0 CHECK (english >= 0 AND english <= 100),
+    computer            NUMERIC(5,2) DEFAULT 0 CHECK (computer >= 0 AND computer <= 100),
+    physics             NUMERIC(5,2) DEFAULT 0 CHECK (physics >= 0 AND physics <= 100),
+    chemistry           NUMERIC(5,2) DEFAULT 0 CHECK (chemistry >= 0 AND chemistry <= 100),
+    biology             NUMERIC(5,2) DEFAULT 0 CHECK (biology >= 0 AND biology <= 100),
 
     -- Behavioural & Lifestyle
-    attendance          NUMERIC(4,2) DEFAULT 0.9,  -- 0.0 – 1.0 (90%)
-    study_hours         NUMERIC(4,1) DEFAULT 5.0,  -- hours per day
-    internet_access     SMALLINT DEFAULT 1,        -- 0 or 1
-    extracurricular     SMALLINT DEFAULT 0,        -- 0 or 1
-    part_time_job       SMALLINT DEFAULT 0,        -- 0 or 1
-    parent_support      SMALLINT DEFAULT 3,        -- 1-5
-    free_time           SMALLINT DEFAULT 3,        -- 1-5
-    go_out              SMALLINT DEFAULT 2,        -- 1-5
+    attendance          NUMERIC(4,2) DEFAULT 0.9 CHECK (attendance >= 0.0 AND attendance <= 1.0),
+    study_hours         NUMERIC(4,1) DEFAULT 5.0 CHECK (study_hours >= 0 AND study_hours <= 16),
+    internet_access     SMALLINT DEFAULT 1 CHECK (internet_access IN (0, 1)),
+    extracurricular     SMALLINT DEFAULT 0 CHECK (extracurricular IN (0, 1)),
+    part_time_job       SMALLINT DEFAULT 0 CHECK (part_time_job IN (0, 1)),
+    parent_support      SMALLINT DEFAULT 3 CHECK (parent_support >= 1 AND parent_support <= 5),
+    free_time           SMALLINT DEFAULT 3 CHECK (free_time >= 1 AND free_time <= 5),
+    go_out              SMALLINT DEFAULT 2 CHECK (go_out >= 1 AND go_out <= 5),
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

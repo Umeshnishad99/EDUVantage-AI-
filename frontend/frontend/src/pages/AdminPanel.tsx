@@ -11,6 +11,7 @@ import {
 import { API_BASE_URL } from '../utils/api';
 
 const CAT_COLORS: Record<string, string> = { High: '#10b981', Medium: '#3b82f6', Low: '#f59e0b' };
+const CAT_BG: Record<string, string> = { High: 'bg-emerald-50/50', Medium: 'bg-blue-50/50', Low: 'bg-amber-50/50' };
 
 type Tab = 'overview' | 'students' | 'recommendations' | 'cgpa-recs' | 'cgpa-roadmaps';
 
@@ -279,12 +280,17 @@ export default function AdminPanel() {
               {stats?.alerts?.length > 0 ? (
                 <div className="space-y-3">
                   {stats.alerts.map((a: any, i: number) => (
-                    <div key={i} className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                      <div className={`w-2 h-10 rounded-full shrink-0 ${a.severity === 'high' ? 'bg-red-500' : 'bg-amber-500'}`} />
-                      <div>
-                        <p className="text-sm font-black text-slate-800">{a.name}</p>
-                        <p className="text-xs font-medium text-slate-500">{a.message}</p>
+                    <div key={i} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-amber-200 transition-all">
+                      <div className="flex items-start gap-3">
+                        <div className={`w-1.5 h-10 rounded-full shrink-0 ${a.severity === 'high' ? 'bg-red-500' : 'bg-amber-500'}`} />
+                        <div>
+                          <p className="text-sm font-black text-slate-800">{a.name}</p>
+                          <p className="text-[11px] font-medium text-slate-500 mt-0.5">{a.message}</p>
+                        </div>
                       </div>
+                      <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${a.severity === 'high' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>
+                        {a.severity}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -315,7 +321,7 @@ export default function AdminPanel() {
                 </thead>
                 <tbody className="divide-y divide-slate-50">
                   {filteredStudents.length > 0 ? filteredStudents.map((s, i) => (
-                    <tr key={i} className="hover:bg-slate-50/50 transition-all">
+                    <tr key={i} className={`hover:bg-slate-100/80 transition-all ${s.category ? CAT_BG[s.category] : ''}`}>
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-black text-sm">{s.name?.[0]}</div>

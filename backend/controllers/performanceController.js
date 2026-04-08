@@ -34,7 +34,6 @@ const submitPerformance = async (req, res) => {
   const {
     age, ses_quartile, parental_education, school_type,
     math, english, computer, physics, chemistry, biology,
-    marks1, marks2, marks3, marks4, marks5, marks6,
     attendance, study_hours,
     internet_access, extracurricular, part_time_job,
     parent_support, free_time, go_out,
@@ -48,53 +47,25 @@ const submitPerformance = async (req, res) => {
     console.log('🚀 SUBMIT for user:', req.user.id);
 
     // ── STEP 1: Insert student_performance record ────────────────
-    let performanceId;
-    try {
-      // FIX #3 — attendance stored as 0.0-1.0 in DB.
-      // Accept either format from frontend: if value > 1, treat as percentage and divide.
-      const rawAttendance = safeNum(attendance, 0.9);
-      const attendanceStored = rawAttendance > 1 ? rawAttendance / 100 : rawAttendance;
+    const perfParams = [
+      req.user.id, age, ses_quartile, parental_education, school_type,
+      math, english, computer, physics, chemistry, biology,
+      attendance, study_hours, internet_access, extracurricular,
+      part_time_job, parent_support, free_time, go_out
+    ];
 
-      const perfParams = [
-        req.user.id,
-        safeNum(age, 18),
-        safeNum(ses_quartile, 2),
-        parental_education || null,
-        school_type || null,
-        safeNum(math  ?? marks1, 0),
-        safeNum(english ?? marks2, 0),
-        safeNum(computer ?? marks3, 0),
-        safeNum(physics ?? marks4, 0),
-        safeNum(chemistry ?? marks5, 0),
-        safeNum(biology ?? marks6, 0),
-        attendanceStored,
-        safeNum(study_hours, 5),
-        safeNum(internet_access, 1),
-        safeNum(extracurricular, 0),
-        safeNum(part_time_job, 0),
-        safeNum(parent_support, 3),
-        safeNum(free_time, 3),
-        safeNum(go_out, 2),
-      ];
-
-      console.log('📝 INSERT student_performance params:', JSON.stringify(perfParams));
-
-      const perfResult = await query(
-        `INSERT INTO student_performance
-           (user_id, age, ses_quartile, parental_education, school_type,
-            math, english, computer, physics, chemistry, biology,
-            attendance, study_hours, internet_access, extracurricular,
-            part_time_job, parent_support, free_time, go_out)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)
-         RETURNING id`,
-        perfParams
-      );
-      performanceId = perfResult.rows[0].id;
-      console.log('✅ student_performance ID =', performanceId);
-    } catch (dbErr) {
-      console.error('❌ DB ERROR [student_performance insert]:', dbErr);
-      return res.status(500).json({ message: 'Database Error (Performance Insert)', error: dbErr.message });
-    }
+    const perfResult = await query(
+      `INSERT INTO student_performance
+         (user_id, age, ses_quartile, parental_education, school_type,
+          math, english, computer, physics, chemistry, biology,
+          attendance, study_hours, internet_access, extracurricular,
+          part_time_job, parent_support, free_time, go_out)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)
+       RETURNING id`,
+      perfParams
+    );
+    const performanceId = perfResult.rows[0].id;
+    console.log('✅ student_performance saved. ID =', performanceId);
 
     // ── STEP 2: Call ML API ──────────────────────────────────────
     let mlApiUrl = (process.env.ML_API_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '');
@@ -109,29 +80,14 @@ const submitPerformance = async (req, res) => {
     };
 
     try {
-      const rawAttendance  = safeNum(attendance, 0.9);
-      const attendanceForML = rawAttendance > 1 ? rawAttendance : rawAttendance * 100;
-
       const mlBody = {
-        math:            safeNum(math      ?? marks1, 0),
-        english:         safeNum(english   ?? marks2, 0),
-        computer:        safeNum(computer  ?? marks3, 0),
-        physics:         safeNum(physics   ?? marks4, 0),
-        chemistry:       safeNum(chemistry ?? marks5, 0),
-        biology:         safeNum(biology   ?? marks6, 0),
-        attendance_rate: attendanceForML,
-        study_hours:     safeNum(study_hours, 5),
-        parent_support:  safeNum(parent_support, 3),
-        free_time:       safeNum(free_time, 3),
-        go_out:          safeNum(go_out, 2),
-        internet_access: safeNum(internet_access, 1),
-        extracurricular: safeNum(extracurricular, 0),
-        part_time_job:   safeNum(part_time_job, 0),
-        ses_quartile:    safeNum(ses_quartile, 2),
+        math, english, computer, physics, chemistry, biology,
+        attendance_rate: attendance * 100, // ML expects percentage (0-100)
+        study_hours, parent_support, free_time, go_out,
+        internet_access, extracurricular, part_time_job, ses_quartile
       };
 
       console.log('🤖 CALLING ML API:', `${mlApiUrl}/predict`);
-
       const mlRes = await fetch(`${mlApiUrl}/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -146,52 +102,37 @@ const submitPerformance = async (req, res) => {
         pred.weak_areas      = mlData.weak_areas    || [];
         pred.recommendations = mlData.recommendations || '';
         pred.roadmap         = mlData.roadmap       || [];
-        
-        console.log('✅ ML Prediction:', pred.category, '(GPA:', pred.gpa, ')');
       } else {
-        const errText = await mlRes.text();
-        console.error('❌ ML API Error:', errText);
+        console.error('❌ ML API Error:', await mlRes.text());
       }
     } catch (mlErr) {
       console.error('❌ ML API Connection Failed:', mlErr.message);
     }
 
     // ── STEP 3: Save prediction ──────────────────────────────────
-    try {
-      const predParams = [
-        req.user.id, 
-        performanceId,
-        pred.predicted_score, 
-        pred.gpa, 
-        pred.category,
-        pred.confidence_score,
-        JSON.stringify(pred.recommendations), // Saving recommendations string as JSON-compatible or text
-        JSON.stringify(pred.roadmap),
-        JSON.stringify(pred.weak_areas)
-      ];
+    const predParams = [
+      req.user.id, performanceId, pred.predicted_score, pred.gpa, pred.category,
+      pred.confidence_score, JSON.stringify(pred.recommendations),
+      JSON.stringify(pred.roadmap), JSON.stringify(pred.weak_areas)
+    ];
 
-      const predResult = await query(
-        `INSERT INTO predictions
-           (user_id, performance_id, predicted_score, gpa, category,
-            confidence_score, recommendations, roadmap, weak_areas)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
-        predParams
-      );
+    const predResult = await query(
+      `INSERT INTO predictions
+         (user_id, performance_id, predicted_score, gpa, category,
+          confidence_score, recommendations, roadmap, weak_areas)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
+      predParams
+    );
 
-      return res.status(201).json({
-        message:        'Analysis complete',
-        performance_id: performanceId,
-        prediction:     predResult.rows[0],
-      });
-
-    } catch (saveErr) {
-      console.error('❌ DB ERROR [predictions insert]:', saveErr);
-      return res.status(500).json({ message: 'Database Error (Predictions Insert)', error: saveErr.message });
-    }
+    return res.status(201).json({
+      message: 'Analysis complete',
+      performance_id: performanceId,
+      prediction: predResult.rows[0],
+    });
 
   } catch (criticalErr) {
     console.error('🔥 CRITICAL ERROR [submitPerformance]:', criticalErr);
-    return res.status(500).json({ message: 'Internal Server Error', error: criticalErr.message });
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
