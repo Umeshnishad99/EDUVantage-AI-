@@ -1,22 +1,28 @@
 const { query } = require('../config/db');
 
-// Verify DB schema at startup (logs columns to terminal)
+// Verify DB schema at startup (Auto-initialize if missing)
 const verifySchema = async () => {
   try {
-    const res = await query(`
-      SELECT column_name, data_type
-      FROM information_schema.columns
+    const checkRes = await query(`
+      SELECT table_name 
+      FROM information_schema.tables 
       WHERE table_name = 'student_performance'
-      ORDER BY ordinal_position;
     `);
-    console.log('📊 DB SCHEMA (student_performance):');
-    if (res.rows.length === 0) {
-      console.error("❌ 'student_performance' table NOT found!");
+
+    if (checkRes.rows.length === 0) {
+      console.log('⚠️  Schema missing. Attempting auto-setup...');
+      const fs = require('fs');
+      const path = require('path');
+      const schemaPath = path.join(__dirname, '../config/schema.sql');
+      const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+      
+      await query(schemaSql);
+      console.log('✅ Auto-setup complete: Tables created.');
     } else {
-      res.rows.forEach((c) => console.log(`   - ${c.column_name} (${c.data_type})`));
+      console.log('📊 DB SCHEMA (student_performance): ✅ FOUND');
     }
   } catch (err) {
-    console.error('❌ SCHEMA VERIFICATION FAILED:', err.message);
+    console.error('❌ SCHEMA VERIFICATION / AUTO-SETUP FAILED:', err.message);
   }
 };
 verifySchema();

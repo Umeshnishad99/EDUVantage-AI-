@@ -6,10 +6,25 @@ import {
   CheckCircle, Play, Sparkles, Rocket, Shield, 
   Globe, Laptop, GraduationCap, ChevronLeft, ChevronRight
 } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const Landing = () => {
   const navigate = useNavigate();
   const [activeTestimonial, setActiveTestimonial] = useState(0);
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "EduVantage AI",
+    "operatingSystem": "Web",
+    "applicationCategory": "EducationalApplication",
+    "description": "AI-driven student performance prediction and GPA forecasting tool.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  };
 
   const testimonials = [
     {
@@ -74,6 +89,13 @@ const Landing = () => {
 
   return (
     <div className="bg-background text-foreground font-sans selection:bg-primary/20 overflow-x-hidden transition-colors duration-300">
+      <Helmet>
+        <title>EduVantage AI | Next-Gen Academic Performance Prediction</title>
+        <meta name="description" content="Predict your academic future with EduVantage AI. Get precise GPA forecasts, personalized study roadmaps, and career insights today." />
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
       
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
@@ -303,7 +325,7 @@ const Landing = () => {
                      className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
                   >
                      <div className="relative aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl shadow-slate-300">
-                        <img src={testimonials[activeTestimonial].image} alt="Testimonial contributor" className="w-full h-full object-cover" />
+                        <img src={testimonials[activeTestimonial].image} alt={`Educational professional - ${testimonials[activeTestimonial].name}`} className="w-full h-full object-cover" />
                         <div className="absolute bottom-6 left-6 right-6 p-6 bg-white/10 backdrop-blur-3xl border border-white/20 rounded-3xl">
                            <p className="text-white text-3xl font-black">{testimonials[activeTestimonial].stat}</p>
                            <p className="text-blue-200 text-[10px] font-black uppercase tracking-[0.3em]">Verified Outcome</p>

@@ -3,6 +3,7 @@ import {
   Briefcase, Target, TrendingUp, Globe, 
   Laptop, GraduationCap, Sparkles 
 } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const Services = () => {
 
@@ -47,6 +48,10 @@ const Services = () => {
 
   return (
     <div className="bg-white min-h-screen pt-32 pb-24 font-sans selection:bg-blue-100">
+      <Helmet>
+        <title>Our AI Services | EduVantage Academic Predictive Tools</title>
+        <meta name="description" content="Discover EduVantage AI's suite of academic predictive tools including GPA forecasting, study roadmaps, and career alignment." />
+      </Helmet>
       
       {/* Hero Section */}
       <section className="px-6 mb-24">

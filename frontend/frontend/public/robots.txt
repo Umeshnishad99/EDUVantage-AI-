@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /settings
+
+Sitemap: https://eduvantage-ai.onrender.com/sitemap.xml

@@ -4,6 +4,7 @@ import {
   Laptop, GraduationCap, ArrowRight, Sparkles, 
   Map, UserCheck, Shield 
 } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const Careers = () => {
   const jobRoles = [
@@ -15,6 +16,10 @@ const Careers = () => {
 
   return (
     <div className="bg-white min-h-screen pt-32 pb-24 font-sans selection:bg-indigo-100">
+      <Helmet>
+        <title>Careers | Join the EduVantage AI Team</title>
+        <meta name="description" content="Build the future of education with us. Explore open positions at EduVantage AI in Engineering, Data Science, and Design." />
+      </Helmet>
       
       {/* Hero Section */}
       <section className="px-6 mb-24 relative overflow-hidden">

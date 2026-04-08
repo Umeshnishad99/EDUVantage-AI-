@@ -4,6 +4,7 @@ import {
   Globe, Rocket, ArrowRight 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const About = () => {
   const navigate = useNavigate();
@@ -17,6 +18,10 @@ const About = () => {
 
   return (
     <div className="bg-white min-h-screen pt-20">
+      <Helmet>
+        <title>About EduVantage AI | Our Mission & Vision</title>
+        <meta name="description" content="Learn about the mission behind EduVantage AI. We aim to empower students and institutions through advanced predictive academic analytics." />
+      </Helmet>
       
       {/* Hero Section */}
       <section className="relative py-24 lg:py-32 overflow-hidden bg-slate-900 text-white">

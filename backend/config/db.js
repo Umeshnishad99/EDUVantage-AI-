@@ -19,7 +19,10 @@ pool.query('SELECT NOW()', (err, res) => {
   if (err) {
     console.error('❌ DB Test Connection Failed:', err.message);
   } else {
-    console.log('✅ DB Connected. Server Time:', res.rows[0].now);
+    // Log connection details (safely)
+    const dbInfo = connectionString ? 'Remote (Neon)' : `${process.env.DB_NAME} on ${process.env.DB_HOST}`;
+    console.log(`✅ DB Connected: ${dbInfo}`);
+    console.log('✅ Server Time:', res.rows[0].now);
   }
 });
 

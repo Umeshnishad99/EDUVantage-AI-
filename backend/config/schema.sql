@@ -1,17 +1,5 @@
--- ══════════════════════════════════════════════════════════
--- AI-Based Student Performance Prediction System
--- Full Schema (run this fresh or as migration)
--- ══════════════════════════════════════════════════════════
-
-DROP TABLE IF EXISTS academic_records CASCADE;
-DROP TABLE IF EXISTS students CASCADE;
-DROP TABLE IF EXISTS custom_recommendations CASCADE;
-DROP TABLE IF EXISTS predictions CASCADE;
-DROP TABLE IF EXISTS student_performance CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
-
 -- ── Users ─────────────────────────────────────────────────
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id            SERIAL PRIMARY KEY,
     name          VARCHAR(100)  NOT NULL,
     email         VARCHAR(100)  UNIQUE NOT NULL,
@@ -24,7 +12,7 @@ CREATE TABLE users (
 
 -- ── Student Performance Submissions ────────────────────────
 -- Optimized for the 15-feature ML Predictor
-CREATE TABLE student_performance (
+CREATE TABLE IF NOT EXISTS student_performance (
     id                  SERIAL PRIMARY KEY,
     user_id             INTEGER REFERENCES users(id) ON DELETE CASCADE,
 
@@ -56,7 +44,7 @@ CREATE TABLE student_performance (
 );
 
 -- ── Predictions ────────────────────────────────────────────
-CREATE TABLE predictions (
+CREATE TABLE IF NOT EXISTS predictions (
     id               SERIAL  PRIMARY KEY,
     user_id          INTEGER REFERENCES users(id)               ON DELETE CASCADE,
     performance_id   INTEGER REFERENCES student_performance(id) ON DELETE CASCADE,
@@ -71,7 +59,7 @@ CREATE TABLE predictions (
 );
 
 -- ── Custom Recommendations (Teacher-added) ─────────────────
-CREATE TABLE custom_recommendations (
+CREATE TABLE IF NOT EXISTS custom_recommendations (
     id          SERIAL  PRIMARY KEY,
     teacher_id  INTEGER REFERENCES users(id) ON DELETE CASCADE,
     target_category VARCHAR(20),  -- Low / Medium / High / All
@@ -82,7 +70,7 @@ CREATE TABLE custom_recommendations (
 );
 
 -- ── Legacy tables (keep for backward compat) ──────────────
-CREATE TABLE students (
+CREATE TABLE IF NOT EXISTS students (
     id         SERIAL PRIMARY KEY,
     user_id    INTEGER REFERENCES users(id) ON DELETE CASCADE,
     first_name VARCHAR(100) NOT NULL,
@@ -92,7 +80,7 @@ CREATE TABLE students (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE academic_records (
+CREATE TABLE IF NOT EXISTS academic_records (
     id                   SERIAL PRIMARY KEY,
     student_id           INTEGER REFERENCES students(id) ON DELETE CASCADE,
     term                 VARCHAR(50) NOT NULL,
