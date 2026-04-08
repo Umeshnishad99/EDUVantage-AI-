@@ -24,9 +24,10 @@ const About = () => {
       </Helmet>
       
       {/* Hero Section */}
-      <section className="relative py-24 lg:py-32 overflow-hidden bg-slate-900 text-white">
-        <div className="absolute inset-0 -z-10 opacity-30">
-          <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-600 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+      <section className="relative py-24 lg:py-32 overflow-hidden bg-slate-930 text-white">
+        <div className="absolute inset-0 -z-10 bg-slate-950">
+           <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] mix-blend-screen animate-pulse" />
+           <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-indigo-600/10 rounded-full blur-[100px] mix-blend-screen" />
         </div>
 
         <div className="max-w-7xl mx-auto px-6">

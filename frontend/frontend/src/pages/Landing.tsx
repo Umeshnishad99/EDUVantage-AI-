@@ -30,21 +30,21 @@ const Landing = () => {
     {
       name: "Dr. Sarah Chen",
       role: "Dean of Academic Affairs",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1888&auto=format&fit=crop",
+      image: "/avatar_sarah.png",
       text: "EduVantage AI has revolutionized how we identify at-risk students. Our retention rates have improved by 22% in just one semester.",
       stat: "+22% Retention"
     },
     {
       name: "Marcus Thorne",
       role: "Senior Data Science Student",
-      image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1887&auto=format&fit=crop",
+      image: "/avatar_marcus.png",
       text: "The roadmap feature is a game-changer. It told me exactly where to focus my energy, and I saw my GPA jump from 3.2 to 3.8.",
       stat: "3.8 Final GPA"
     },
     {
       name: "Prof. James Miller",
       role: "STEM Department Head",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop",
+      image: "/avatar_james.png",
       text: "Data-driven education is the future. This platform provides the clarity both teachers and students have been craving for years.",
       stat: "100k+ Data Points"
     }
@@ -100,18 +100,19 @@ const Landing = () => {
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
         {/* Cinematic Background Video */}
-        <div className="absolute inset-0 -z-10 bg-slate-900">
+        <div className="absolute inset-0 -z-10 bg-slate-930">
+            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] mix-blend-screen animate-pulse" />
+            <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/10 rounded-full blur-[100px] mix-blend-screen" />
             <video 
               autoPlay 
               loop 
               muted 
               playsInline
-              className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-40 brightness-75 scale-110 motion-safe:animate-[slow-zoom_20s_infinite_alternate]"
+              className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-30 brightness-75 scale-110 motion-safe:animate-[slow-zoom_20s_infinite_alternate]"
             >
               <source src="https://assets.mixkit.co/videos/preview/mixkit-group-of-students-working-on-a-project-together-15582-large.mp4" type="video/mp4" />
             </video>
-            <div className="absolute inset-0 bg-gradient-to-tr from-slate-900 via-slate-900/40 to-transparent" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#0f172a_100%)] opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-slate-950 via-slate-900/60 to-transparent" />
         </div>
 
         <div className="max-w-7xl mx-auto px-6 w-full">
@@ -128,8 +129,8 @@ const Landing = () => {
               </div>
 
               <h1 className="text-5xl lg:text-8xl font-black text-white tracking-tighter leading-[0.9] mb-8">
-                Your future, <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/80 to-accent">Predicted.</span>
+                Stop guessing. <br />
+                Start <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/80 to-accent">Winning.</span>
               </h1>
 
               <p className="text-xl text-slate-300 font-medium mb-12 max-w-xl leading-relaxed">
