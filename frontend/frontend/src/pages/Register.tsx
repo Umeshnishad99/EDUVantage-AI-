@@ -121,6 +121,7 @@ const Register = () => {
                       className="w-full pl-12 pr-4 py-3.5 bg-muted/50 border border-border rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-foreground placeholder:text-muted-foreground/50"
                       placeholder="Enter your name"
                       required
+                      autoComplete="name"
                     />
                   </div>
                 </div>
@@ -138,6 +139,7 @@ const Register = () => {
                       className="w-full pl-12 pr-4 py-3.5 bg-muted/50 border border-border rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-foreground placeholder:text-muted-foreground/50"
                       placeholder="name@institution.edu"
                       required
+                      autoComplete="email"
                     />
                   </div>
                 </div>
@@ -155,6 +157,7 @@ const Register = () => {
                       className="w-full pl-12 pr-4 py-3.5 bg-muted/50 border border-border rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all font-bold text-foreground placeholder:text-muted-foreground/50"
                       placeholder="Create password"
                       required
+                      autoComplete="new-password"
                     />
                   </div>
                 </div>
