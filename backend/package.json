@@ -18,7 +18,8 @@
     "express-validator": "^7.3.2",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^8.0.4",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "resend": "^6.10.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
