@@ -70,7 +70,7 @@ const registerUser = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', debug: error.message });
   }
 };
 
@@ -103,8 +103,11 @@ const loginUser = async (req, res) => {
       token,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('🔥 LOGIN ERROR:', error);
+    res.status(500).json({ 
+      message: 'Internal Server Error', 
+      debug: error.message 
+    });
   }
 };
 
