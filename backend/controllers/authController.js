@@ -34,7 +34,8 @@ const registerUser = async (req, res) => {
     }
 
     // Send Verification Email
-    const verificationUrl = `${process.env.APP_URL}/verify/${verificationToken}`;
+    const frontendUrl = req.headers.origin || process.env.APP_URL || 'http://localhost:5173';
+    const verificationUrl = `${frontendUrl}/verify/${verificationToken}`;
     
     const emailHtml = `
       <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
