@@ -17,7 +17,10 @@ const pool = new Pool({
 // Diagnostic check (Safe to run without top-level await)
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
-    console.error('❌ DB Test Connection Failed:', err.message);
+    console.error('❌ DB Test Connection Failed!');
+    console.error('   Error Code:', err.code);
+    console.error('   Error Message:', err.message);
+    console.error('   DATABASE_URL status:', connectionString ? 'PRESENT' : 'MISSING');
   } else {
     // Log connection details (safely)
     const dbInfo = connectionString ? 'Remote (Neon)' : `${process.env.DB_NAME} on ${process.env.DB_HOST}`;

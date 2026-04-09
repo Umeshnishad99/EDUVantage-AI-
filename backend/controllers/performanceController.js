@@ -22,7 +22,8 @@ const verifySchema = async () => {
       console.log('📊 DB SCHEMA (student_performance): ✅ FOUND');
     }
   } catch (err) {
-    console.error('❌ SCHEMA VERIFICATION / AUTO-SETUP FAILED:', err.message);
+    console.error('❌ SCHEMA VERIFICATION / AUTO-SETUP FAILED!');
+    console.error('   Error Message:', err.message);
   }
 };
 verifySchema();
