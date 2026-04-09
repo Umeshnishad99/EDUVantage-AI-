@@ -18,12 +18,20 @@ const registerUser = async (req, res) => {
     // Generate verification token
     const verificationToken = crypto.randomBytes(32).toString('hex');
 
+    const skipVerification = process.env.SKIP_VERIFICATION === 'true';
     const newUser = await query(
-      'INSERT INTO users (name, email, password_hash, role, verification_token) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email, role',
-      [name, email, hashedPassword, role || 'student', verificationToken]
+      'INSERT INTO users (name, email, password_hash, role, verification_token, is_verified) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, name, email, role',
+      [name, email, hashedPassword, role || 'student', skipVerification ? null : verificationToken, skipVerification]
     );
 
     const user = newUser.rows[0];
+
+    if (skipVerification) {
+      return res.status(201).json({ 
+        message: 'Registration successful! Verification skipped (debug mode).',
+        user 
+      });
+    }
 
     // Send Verification Email
     const verificationUrl = `${process.env.APP_URL}/verify/${verificationToken}`;
@@ -76,8 +84,8 @@ const loginUser = async (req, res) => {
 
     const user = result.rows[0];
 
-    // Check if verified
-    if (!user.is_verified) {
+    // Check if verified (unless skip enabled)
+    if (!user.is_verified && process.env.SKIP_VERIFICATION !== 'true') {
       return res.status(401).json({ message: 'Please verify your email address before logging in.' });
     }
 
