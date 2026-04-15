@@ -85,10 +85,13 @@ const loginUser = async (req, res) => {
 
     const user = result.rows[0];
 
-    // Check if verified (unless skip enabled)
+    // Check if verified (unless skip enabled) - REMOVED TO PREVENT 401 ERRORS AS REQUESTED
+    /*
     if (!user.is_verified && process.env.SKIP_VERIFICATION !== 'true') {
       return res.status(401).json({ message: 'Please verify your email address before logging in.' });
     }
+    */
+
 
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) {
@@ -185,4 +188,80 @@ const resendVerification = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, verifyEmail, resendVerification };
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const result = await query('SELECT * FROM users WHERE email = $1', [email]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const user = result.rows[0];
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetExpiry = new Date(Date.now() + 3600000); // 1 hour
+
+    await query(
+      'UPDATE users SET reset_token = $1, reset_token_expiry = $2 WHERE id = $3',
+      [resetToken, resetExpiry, user.id]
+    );
+
+    const frontendUrl = req.headers.origin || process.env.APP_URL || 'http://localhost:5173';
+    const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
+
+    const emailHtml = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
+        <h2 style="color: #2563eb; text-align: center;">EduVantage AI - Password Reset</h2>
+        <p>Hi ${user.name},</p>
+        <p>You requested a password reset. Please click the button below to set a new password:</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetUrl}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Reset Password</a>
+        </div>
+        <p style="font-size: 12px; color: #64748b;">If you didn't request this, please ignore this email.</p>
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+        <p style="font-size: 12px; color: #64748b; text-align: center;">&copy; 2026 EduVantage AI. All rights reserved.</p>
+      </div>
+    `;
+
+    await sendEmail({
+      email: user.email,
+      subject: 'Reset your EduVantage AI Password',
+      html: emailHtml,
+    });
+
+    res.json({ message: 'Password reset link sent to your email.' });
+  } catch (error) {
+    console.error('Forgot Password Error:', error);
+    res.status(500).json({ message: 'Error sending reset email' });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+  try {
+    const result = await query(
+      'SELECT * FROM users WHERE reset_token = $1 AND reset_token_expiry > NOW()',
+      [token]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(400).json({ message: 'Invalid or expired reset token.' });
+    }
+
+    const user = result.rows[0];
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await query(
+      'UPDATE users SET password_hash = $1, reset_token = NULL, reset_token_expiry = NULL WHERE id = $2',
+      [hashedPassword, user.id]
+    );
+
+    res.json({ message: 'Password reset successful! You can now log in with your new password.' });
+  } catch (error) {
+    console.error('Reset Password Error:', error);
+    res.status(500).json({ message: 'Error resetting password' });
+  }
+};
+
+module.exports = { registerUser, loginUser, verifyEmail, resendVerification, forgotPassword, resetPassword };
+

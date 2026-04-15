@@ -15,7 +15,10 @@ import PredictGPA from './pages/PredictGPA';
 import Navbar from './components/Navbar';
 import { ThemeProvider } from './context/ThemeContext';
 import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import ChatbotWidget from './components/ChatbotWidget';
+
 
 function App() {
   return (
@@ -30,6 +33,9 @@ function App() {
                 <Route path="/login"    element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/verify/:token" element={<VerifyEmail />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password/:token" element={<ResetPassword />} />
+
                 <Route path="/about"    element={<About />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/careers"  element={<Careers />} />
