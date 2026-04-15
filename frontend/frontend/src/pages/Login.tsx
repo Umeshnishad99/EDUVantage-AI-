@@ -15,11 +15,15 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState('');
+  const [resendStatus, setResendStatus] = useState('');
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setUnverifiedEmail('');
+    setResendStatus('');
     
     try {
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
@@ -34,12 +38,34 @@ const Login = () => {
         login(data);
         navigate(data.user.role === 'teacher' ? '/dashboard' : '/student/dashboard');
       } else {
+        if (response.status === 401 && data.message.toLowerCase().includes('verify your email')) {
+          setUnverifiedEmail(email);
+        }
         setError(data.message || 'Invalid credentials');
       }
     } catch (err) {
       setError('Connection error. Is the server running?');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    setResendStatus('Sending...');
+    try {
+      const resp = await fetch(`${API_BASE_URL}/api/auth/resend-verification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: unverifiedEmail })
+      });
+      const data = await resp.json();
+      if (resp.ok) {
+        setResendStatus('Verification email sent successfully! Please check your inbox.');
+      } else {
+        setResendStatus(data.message || 'Error sending verification email.');
+      }
+    } catch (err) {
+      setResendStatus('Connection error. Is the server running?');
     }
   };
 
@@ -83,9 +109,23 @@ const Login = () => {
           <form onSubmit={handleLogin} className="space-y-6">
             <AnimatePresence mode='wait'>
               {error && (
-                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
-                  <p className="text-xs font-bold text-red-400">{error}</p>
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex flex-col gap-3">
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
+                    <p className="text-xs font-bold text-red-400">{error}</p>
+                  </div>
+                  {unverifiedEmail && (
+                    <div className="flex flex-col items-start gap-2 pt-2 border-t border-red-500/10">
+                        <button 
+                            type="button" 
+                            onClick={handleResendVerification}
+                            className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg text-xs font-bold hover:bg-red-500/30 transition-colors"
+                        >
+                            Resend Verification Email
+                        </button>
+                        {resendStatus && <span className="text-xs text-red-300 font-medium">{resendStatus}</span>}
+                    </div>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
