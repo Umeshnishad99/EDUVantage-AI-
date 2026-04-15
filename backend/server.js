@@ -1,4 +1,9 @@
 const express = require('express');
+const dns = require('dns');
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder('ipv4first');
+}
+
 const cors    = require('cors');
 require('dotenv').config();
 const { query } = require('./config/db');
