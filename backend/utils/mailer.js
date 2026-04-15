@@ -4,17 +4,18 @@ const sendEmail = async (options) => {
   try {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
-      port: 465,
-      secure: true, // true for port 465 (SMTPS)
+      port: 587,
+      secure: false, // false for port 587 (STARTTLS)
       auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_PASS,
       },
       family: 4, // Force IPv4 to avoid ENETUNREACH on Render
-      connectionTimeout: 10000, // 10 seconds
+      connectionTimeout: 15000, 
       greetingTimeout: 5000,
-      socketTimeout: 15000, // 15 seconds
+      socketTimeout: 15000,
     });
+
 
 
 
