@@ -5,7 +5,9 @@ const { query } = require('../config/db');
 const sendEmail = require('../utils/mailer');
 
 const registerUser = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  let { name, email, password, role } = req.body;
+  if (email) email = email.toLowerCase();
+
   try {
     const userExists = await query('SELECT * FROM users WHERE email = $1', [email]);
     if (userExists.rows.length > 0) {
@@ -76,7 +78,9 @@ const registerUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
+  if (email) email = email.toLowerCase();
+
   try {
     const result = await query('SELECT * FROM users WHERE email = $1', [email]);
     if (result.rows.length === 0) {
@@ -134,7 +138,9 @@ const verifyEmail = async (req, res) => {
 };
 
 const resendVerification = async (req, res) => {
-  const { email } = req.body;
+  let { email } = req.body;
+  if (email) email = email.toLowerCase();
+
   if (!email) {
     return res.status(400).json({ message: 'Email is required' });
   }
@@ -189,7 +195,9 @@ const resendVerification = async (req, res) => {
 };
 
 const forgotPassword = async (req, res) => {
-  const { email } = req.body;
+  let { email } = req.body;
+  if (email) email = email.toLowerCase();
+
   try {
     const result = await query('SELECT * FROM users WHERE email = $1', [email]);
     if (result.rows.length === 0) {
