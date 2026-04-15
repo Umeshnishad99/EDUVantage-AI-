@@ -94,14 +94,18 @@ const Login = () => {
         <div className="bg-card/40 backdrop-blur-2xl border border-border rounded-[2.5rem] p-8 lg:p-10 shadow-2xl shadow-primary/10">
           
           <div className="text-center mb-10">
-            <Link to="/" className="inline-flex items-center gap-2 mb-8 group">
+            <Link 
+              to={localStorage.getItem('user') ? (JSON.parse(localStorage.getItem('user')!).role === 'teacher' ? '/dashboard' : '/student/dashboard') : '/'} 
+              className="inline-flex items-center gap-2 mb-8 group"
+            >
               <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
                 <Brain className="text-primary-foreground w-7 h-7" />
               </div>
-              <span className="text-2xl font-black text-foreground tracking-tight">
+              <span className="text-2xl font-black text-foreground tracking-tight uppercase">
                 EduVantage <span className="text-primary">AI</span>
               </span>
             </Link>
+
             <h1 className="text-3xl font-black text-foreground tracking-tight mb-2">Welcome Back</h1>
             <p className="text-muted-foreground font-medium">Log in to your predictive portal.</p>
           </div>
