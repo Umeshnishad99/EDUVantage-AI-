@@ -10,10 +10,12 @@ const sendEmail = async (options) => {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_PASS,
       },
+      family: 4, // Force IPv4 to avoid ENETUNREACH on Render
       connectionTimeout: 10000, // 10 seconds
       greetingTimeout: 5000,
       socketTimeout: 15000, // 15 seconds
     });
+
 
 
     const mailOptions = {
