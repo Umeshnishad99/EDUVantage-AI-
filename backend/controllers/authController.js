@@ -130,4 +130,59 @@ const verifyEmail = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, verifyEmail };
+const resendVerification = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required' });
+  }
+
+  try {
+    const result = await query('SELECT * FROM users WHERE email = $1', [email]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const user = result.rows[0];
+    if (user.is_verified) {
+      return res.status(400).json({ message: 'User is already verified' });
+    }
+
+    // Use existing token if it exists, otherwise generate a new one
+    let verificationToken = user.verification_token;
+    if (!verificationToken) {
+      verificationToken = crypto.randomBytes(32).toString('hex');
+      await query('UPDATE users SET verification_token = $1 WHERE id = $2', [verificationToken, user.id]);
+    }
+
+    const frontendUrl = req.headers.origin || process.env.APP_URL || 'http://localhost:5173';
+    const verificationUrl = `${frontendUrl}/verify/${verificationToken}`;
+    
+    const emailHtml = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
+        <h2 style="color: #2563eb; text-align: center;">EduVantage AI - Resend Verification</h2>
+        <p>Hi ${user.name},</p>
+        <p>You requested a new verification link. Please verify your email address by clicking the button below:</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${verificationUrl}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Verify Email Address</a>
+        </div>
+        <p style="font-size: 12px; color: #64748b;">If the button doesn't work, copy and paste this link into your browser:</p>
+        <p style="font-size: 12px; color: #2563eb;">${verificationUrl}</p>
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+        <p style="font-size: 12px; color: #64748b; text-align: center;">&copy; 2026 EduVantage AI. All rights reserved.</p>
+      </div>
+    `;
+
+    await sendEmail({
+      email: user.email,
+      subject: 'Verify your EduVantage AI Account (Re-sent)',
+      html: emailHtml,
+    });
+
+    res.json({ message: 'Verification email has been re-sent successfully.' });
+  } catch (error) {
+    console.error('Error resending verification email:', error);
+    res.status(500).json({ message: 'Error sending verification email', debug: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser, verifyEmail, resendVerification };

@@ -103,7 +103,7 @@ async def predict(data: PredictionInput):
         # 2. Performance Category
         if predicted_gpa >= 7.5:
             category = "High"
-        elif predicted_gpa >= 5.0:
+        elif predicted_gpa >= 6.0:
             category = "Medium"
         else:
             category = "Low"
