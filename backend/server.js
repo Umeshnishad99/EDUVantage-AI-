@@ -1,6 +1,24 @@
 const express = require('express');
 const cors    = require('cors');
 require('dotenv').config();
+const { query } = require('./config/db');
+
+// ── Auto-Migration Logic for Production ──
+async function bootstrapDB() {
+  try {
+    console.log('🔄 Checking Database Schema...');
+    await query(`
+      ALTER TABLE users 
+      ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255),
+      ADD COLUMN IF NOT EXISTS reset_token_expiry TIMESTAMP;
+    `);
+    console.log('✅ Database Schema is up to date.');
+  } catch (err) {
+    console.error('❌ Database Bootstrap Failed:', err.message);
+  }
+}
+bootstrapDB();
+
 
 const app = express();
 app.use(cors());
@@ -15,6 +33,16 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => res.send('Student Performance AI API v2 running'));
+
+app.get('/health', async (req, res) => {
+  try {
+    await query('SELECT 1');
+    res.json({ status: 'ok', database: 'connected' });
+  } catch (err) {
+    res.status(500).json({ status: 'error', database: err.message });
+  }
+});
+
 
 // ── Routes ────────────────────────────────────────────────
 app.use('/api/auth',           require('./routes/authRoutes'));
