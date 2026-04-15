@@ -3,12 +3,15 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { CheckCircle, XCircle, Loader2, ArrowRight, Brain } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { API_BASE_URL } from '../utils/api';
+import { useAuth } from '../context/AuthContext';
+
 
 const VerifyEmail = () => {
   const { token } = useParams();
-  const navigate = useNavigate();
+  const { login } = useAuth();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
+
 
   useEffect(() => {
     const verify = async () => {
@@ -19,11 +22,17 @@ const VerifyEmail = () => {
         if (response.ok) {
           setStatus('success');
           setMessage(data.message);
-          // Redirect to login after 3 seconds
+          
+          if (data.token && data.user) {
+            login(data);
+          }
+
+          // Redirect to form after 3 seconds
           setTimeout(() => {
-            navigate('/login');
+            navigate(data.user.role === 'teacher' ? '/dashboard' : '/student/form');
           }, 3000);
         } else {
+
           setStatus('error');
           setMessage(data.message || 'Verification failed. The link may be invalid or expired.');
         }
@@ -69,12 +78,13 @@ const VerifyEmail = () => {
             <h1 className="text-3xl font-black text-foreground tracking-tight">Verified!</h1>
             <p className="text-muted-foreground font-medium">{message}</p>
             <Link 
-              to="/login"
+              to={status === 'success' ? '/student/form' : '/login'}
               className="w-full py-4 bg-primary text-primary-foreground font-black rounded-2xl shadow-xl shadow-primary/20 hover:opacity-90 transition-all flex items-center justify-center gap-2 group"
             >
-              Sign In Now
+              {status === 'success' ? 'Go to Form' : 'Sign In Now'}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
+
           </div>
         )}
 

@@ -133,7 +133,16 @@ const verifyEmail = async (req, res) => {
     const user = result.rows[0];
     await query('UPDATE users SET is_verified = TRUE, verification_token = NULL WHERE id = $1', [user.id]);
 
-    res.json({ message: 'Email verified successfully! You can now log in.' });
+    const loginToken = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
+      expiresIn: '30d',
+    });
+
+    res.json({ 
+      message: 'Email verified successfully! Taking you to your dashboard...',
+      token: loginToken,
+      user: { id: user.id, name: user.name, email: user.email, role: user.role }
+    });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error during verification.' });
