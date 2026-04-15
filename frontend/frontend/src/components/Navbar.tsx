@@ -54,6 +54,18 @@ const Navbar = () => {
     navigate('/');
   };
 
+  const handleLogoClick = () => {
+  if (user) {
+    if (user.role === 'teacher') {
+      navigate('/dashboard');
+    } else {
+      navigate('/student/dashboard');
+    }
+  } else {
+    navigate('/');
+  }
+};
+
   return (
     <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
       scrolled || currentSubLinks 
