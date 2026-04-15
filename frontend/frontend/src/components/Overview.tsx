@@ -171,7 +171,8 @@ const Overview = () => {
             )}
           </div>
 
-          <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white flex flex-col shadow-2xl shadow-blue-900/20 relative overflow-hidden">
+          <div className="bg-muted/50 rounded-[2.5rem] p-8 text-foreground flex flex-col shadow-sm border border-border relative overflow-hidden">
+
             <div className="absolute top-0 right-0 p-8 opacity-10">
               <Users className="w-32 h-32 text-blue-400" />
             </div>

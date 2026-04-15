@@ -248,7 +248,8 @@ const Landing = () => {
       </section>
 
       {/* Video Demo Section */}
-      <section className="py-32 bg-white px-6">
+      <section className="py-32 bg-background px-6">
+
          <div className="max-w-7xl mx-auto rounded-[3rem] bg-slate-900 overflow-hidden relative group">
              <div className="grid grid-cols-1 lg:grid-cols-2 items-center">
                 <div className="p-12 lg:p-20 relative z-10">
@@ -273,7 +274,8 @@ const Landing = () => {
                         </li>
                       ))}
                    </ul>
-                   <button className="px-10 py-5 bg-white text-slate-900 font-black rounded-2xl hover:bg-slate-100 transition-all text-sm uppercase tracking-widest">
+                   <button className="px-10 py-5 bg-card text-foreground font-black rounded-2xl hover:bg-muted transition-all text-sm uppercase tracking-widest border border-border">
+
                       Request Full Demo
                    </button>
                 </div>
@@ -289,7 +291,8 @@ const Landing = () => {
                      <source src="https://assets.mixkit.co/videos/preview/mixkit-student-studying-in-a-library-15581-large.mp4" type="video/mp4" />
                    </video>
                    <div className="absolute inset-0 flex items-center justify-center">
-                      <button className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl scale-1 group-hover:scale-110 transition-transform">
+                      <button className="w-24 h-24 bg-card rounded-full flex items-center justify-center shadow-2xl scale-1 group-hover:scale-110 transition-transform">
+
                          <Play className="w-8 h-8 text-blue-600 fill-current ml-1" />
                       </button>
                    </div>
@@ -300,18 +303,19 @@ const Landing = () => {
       </section>
 
       {/* Testimonial Slider */}
-      <section id="testimonials" className="py-32 bg-slate-50 relative overflow-hidden">
+      <section id="testimonials" className="py-32 bg-muted/50 relative overflow-hidden">
+
          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500" />
          
          <div className="max-w-7xl mx-auto px-6">
             <div className="flex flex-col lg:flex-row items-end justify-between mb-16 gap-8">
                <div className="max-w-2xl">
-                  <h2 className="text-4xl lg:text-7xl font-black text-slate-900 tracking-tighter mb-6">Success Stories.</h2>
-                  <p className="text-xl text-slate-500 font-medium">Hear from the educators and students who have already unlocked their academic leverage.</p>
+                  <h2 className="text-4xl lg:text-7xl font-black text-foreground tracking-tighter mb-6">Success Stories.</h2>
+                  <p className="text-xl text-muted-foreground font-medium">Hear from the educators and students who have already unlocked their academic leverage.</p>
                </div>
                <div className="flex gap-4">
-                  <button onClick={prevTestimonial} className="w-16 h-16 rounded-2xl border border-slate-200 flex items-center justify-center hover:bg-white hover:shadow-xl transition-all"><ChevronLeft /></button>
-                  <button onClick={nextTestimonial} className="w-16 h-16 rounded-2xl border border-slate-200 flex items-center justify-center hover:bg-white hover:shadow-xl transition-all"><ChevronRight /></button>
+                  <button onClick={prevTestimonial} className="w-16 h-16 rounded-2xl border border-border flex items-center justify-center hover:bg-card hover:shadow-xl transition-all"><ChevronLeft /></button>
+                  <button onClick={nextTestimonial} className="w-16 h-16 rounded-2xl border border-border flex items-center justify-center hover:bg-card hover:shadow-xl transition-all"><ChevronRight /></button>
                </div>
             </div>
 
@@ -325,9 +329,9 @@ const Landing = () => {
                      transition={{ duration: 0.5, ease: "circOut" }}
                      className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
                   >
-                     <div className="relative aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl shadow-slate-300">
+                     <div className="relative aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl shadow-primary/5">
                         <img src={testimonials[activeTestimonial].image} alt={`Educational professional - ${testimonials[activeTestimonial].name}`} className="w-full h-full object-cover" />
-                        <div className="absolute bottom-6 left-6 right-6 p-6 bg-white/10 backdrop-blur-3xl border border-white/20 rounded-3xl">
+                        <div className="absolute bottom-6 left-6 right-6 p-6 bg-card/10 backdrop-blur-3xl border border-border/20 rounded-3xl">
                            <p className="text-white text-3xl font-black">{testimonials[activeTestimonial].stat}</p>
                            <p className="text-blue-200 text-[10px] font-black uppercase tracking-[0.3em]">Verified Outcome</p>
                         </div>
@@ -336,12 +340,12 @@ const Landing = () => {
                         <div className="flex gap-1 text-amber-400">
                            {[1,2,3,4,5].map(s => <Sparkles key={s} className="w-6 h-6 fill-current" />)}
                         </div>
-                        <p className="text-3xl lg:text-4xl font-black text-slate-900 leading-[1.2] tracking-tight italic">
+                        <p className="text-3xl lg:text-4xl font-black text-foreground leading-[1.2] tracking-tight italic">
                            "{testimonials[activeTestimonial].text}"
                         </p>
                         <div>
-                           <p className="text-2xl font-black text-slate-900">{testimonials[activeTestimonial].name}</p>
-                           <p className="text-blue-600 font-black uppercase text-xs tracking-widest px-1">{testimonials[activeTestimonial].role}</p>
+                           <p className="text-2xl font-black text-foreground">{testimonials[activeTestimonial].name}</p>
+                           <p className="text-primary font-black uppercase text-xs tracking-widest px-1">{testimonials[activeTestimonial].role}</p>
                         </div>
                      </div>
                   </motion.div>
@@ -353,37 +357,38 @@ const Landing = () => {
       {/* Careers Section */}
       <section id="careers" className="py-32 px-6">
          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-             <motion.div {...fadeIn}>
-                <h2 className="text-4xl lg:text-7xl font-black text-slate-900 tracking-tighter mb-8 italic">
-                   Fuel your <br />
-                   <span className="text-indigo-600">future career.</span>
-                </h2>
-                <p className="text-xl text-slate-500 font-medium mb-12 leading-relaxed">
+          <motion.div {...fadeIn}>
+                 <h2 className="text-4xl lg:text-7xl font-black text-foreground tracking-tighter mb-8 italic">
+                    Fuel your <br />
+                    <span className="text-primary">future career.</span>
+                 </h2>
+                 <p className="text-xl text-muted-foreground font-medium mb-12 leading-relaxed">
+
                    Academic success is just the beginning. EduVantage AI maps your course work to 
                    real-world career trends, helping you graduate not just with a degree, but with 
                    the specific leverage required by top-tier employers.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-12">
                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
-                         <Laptop className="text-indigo-600 w-6 h-6" />
+                      <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+                         <Laptop className="text-primary w-6 h-6" />
                       </div>
                       <div>
-                         <h4 className="font-black text-slate-900">Industry Insights</h4>
-                         <p className="text-sm text-slate-500">Real-time matching of your grades to tech industry role requirements.</p>
+                         <h4 className="font-black text-foreground">Industry Insights</h4>
+                         <p className="text-sm text-muted-foreground">Real-time matching of your grades to tech industry role requirements.</p>
                       </div>
                    </div>
                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
-                         <Rocket className="text-blue-600 w-6 h-6" />
+                      <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+                         <Rocket className="text-primary w-6 h-6" />
                       </div>
                       <div>
-                         <h4 className="font-black text-slate-900">Career Launchpad</h4>
-                         <p className="text-sm text-slate-500">Automated portfolio suggestions based on your top academic areas.</p>
+                         <h4 className="font-black text-foreground">Career Launchpad</h4>
+                         <p className="text-sm text-muted-foreground">Automated portfolio suggestions based on your top academic areas.</p>
                       </div>
                    </div>
                 </div>
-                <button className="flex items-center gap-3 text-lg font-black text-slate-900 group">
+                <button className="flex items-center gap-3 text-lg font-black text-foreground group hover:text-primary transition-colors">
                    Explore Careers Path <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                 </button>
              </motion.div>
@@ -392,36 +397,37 @@ const Landing = () => {
                initial={{ opacity: 0, x: 50 }}
                whileInView={{ opacity: 1, x: 0 }}
                viewport={{ once: true }}
-               className="bg-indigo-600 rounded-[3rem] p-1 shadow-2xl shadow-indigo-900/20"
+               className="bg-primary rounded-[3rem] p-1 shadow-2xl shadow-primary/20"
              >
-                <div className="bg-white rounded-[2.9rem] p-10">
-                   <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-6">Career Compatibility</p>
+                <div className="bg-card rounded-[2.9rem] p-10 border border-border">
+                   <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-6">Career Compatibility</p>
                    <div className="space-y-8">
                       {[
-                        { role: "Machine Learning Engineer", match: 96, col: "indigo" },
-                        { role: "Data Scientist", match: 91, col: "blue" },
-                        { role: "Backend Developer", match: 84, col: "slate" }
+                        { role: "Machine Learning Engineer", match: 96, col: "primary" },
+                        { role: "Data Scientist", match: 91, col: "primary" },
+                        { role: "Backend Developer", match: 84, col: "primary" }
                       ].map((item, i) => (
                         <div key={i}>
                            <div className="flex justify-between items-center mb-3">
-                              <span className="font-black text-slate-900">{item.role}</span>
-                              <span className={`text-${item.col}-600 font-black`}>{item.match}%</span>
+                              <span className="font-black text-foreground">{item.role}</span>
+                              <span className={`text-primary font-black`}>{item.match}%</span>
                            </div>
-                           <div className="h-4 w-full bg-slate-100 rounded-lg overflow-hidden">
+                           <div className="h-4 w-full bg-muted rounded-lg overflow-hidden border border-border">
                               <motion.div 
                                  initial={{ width: 0 }} 
                                  whileInView={{ width: `${item.match}%` }} 
                                  transition={{ duration: 1.5, delay: 0.5 }}
-                                 className={`h-full bg-${item.col}-500`}
+                                 className={`h-full bg-primary`}
                               />
                            </div>
                         </div>
                       ))}
                    </div>
-                   <div className="mt-12 p-6 bg-slate-50 rounded-3xl border border-slate-100">
-                      <p className="text-sm font-bold text-slate-600 italic">"Based on your 4.0 in Database Systems and 3.9 in Linear Algebra, you are a top 5% candidate for Data Engineering roles."</p>
+                   <div className="mt-12 p-6 bg-muted rounded-3xl border border-border">
+                      <p className="text-sm font-bold text-muted-foreground italic">"Based on your 4.0 in Database Systems and 3.9 in Linear Algebra, you are a top 5% candidate for Data Engineering roles."</p>
                    </div>
                 </div>
+
              </motion.div>
          </div>
       </section>

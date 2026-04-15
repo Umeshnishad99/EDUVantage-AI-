@@ -148,14 +148,15 @@ export default function StudentDashboard() {
             {/* KPI Row */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {/* GPA Card */}
-              <div className="bg-slate-900 text-white rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl" />
+              <div className="bg-primary text-primary-foreground rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl shadow-primary/20">
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
                 <div className="relative z-10">
-                  <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-2">Predicted GPA</p>
+                  <p className="text-[10px] font-black text-primary-foreground/70 uppercase tracking-widest mb-2">Predicted GPA</p>
                   <div className="text-7xl font-black tracking-tighter text-white leading-none">{pred.gpa}</div>
-                  <p className="text-slate-400 font-bold text-xs mt-3 uppercase tracking-tighter">Academic Projection Score</p>
+                  <p className="text-primary-foreground/60 font-bold text-xs mt-3 uppercase tracking-tighter">Academic Projection Score</p>
                 </div>
               </div>
+
 
               {/* Score Card */}
               <div className="bg-card rounded-[2.5rem] p-8 border border-border shadow-sm flex flex-col justify-between hover:shadow-xl transition-all group">
@@ -200,11 +201,12 @@ export default function StudentDashboard() {
                   <h4 className="text-sm font-black text-foreground uppercase tracking-tight">Active Weakness Alerts</h4>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {weakAreas.map((a: string) => (
-                      <span key={a} className="px-3 py-1 bg-amber-50 border border-amber-100 rounded-lg text-[10px] font-bold text-amber-700 uppercase tracking-wide">
+                      <span key={a} className="px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-lg text-[10px] font-bold text-amber-600 uppercase tracking-wide">
                         {a}
                       </span>
                     ))}
                   </div>
+
                 </div>
               </div>
             )}
@@ -357,10 +359,11 @@ export default function StudentDashboard() {
                         <div className="absolute left-0 top-0 w-12 h-12 bg-primary border-4 border-primary/20 rounded-2xl flex items-center justify-center shadow-2xl shadow-primary/20 z-10 hover:scale-110 transition-transform">
                           <span className="text-primary-foreground font-black text-lg">{i + 1}</span>
                         </div>
-                        <div className="bg-card border border-border rounded-[2rem] p-6 shadow-sm hover:bg-muted/30 hover:border-primary/20 transition-all">
+                        <div className="bg-card border border-border rounded-[2rem] p-6 shadow-sm hover:bg-background/80 hover:border-primary/20 transition-all">
                           <h5 className="text-xl font-black text-foreground tracking-tight leading-tight mb-2">{step.title || step.topic}</h5>
                           <p className="text-sm text-muted-foreground font-medium leading-relaxed">{step.description}</p>
                         </div>
+
                       </div>
                     ))}
                   </div>

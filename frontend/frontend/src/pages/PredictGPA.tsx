@@ -11,8 +11,9 @@ const Label = ({ children }: { children: React.ReactNode }) => (
 );
 
 const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
-  <input {...props} className="w-full px-4 py-3 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl outline-none transition-all font-semibold text-slate-800" />
+  <input {...props} className="w-full px-4 py-3 bg-muted border-2 border-transparent focus:border-primary focus:bg-card rounded-2xl outline-none transition-all font-semibold text-foreground" />
 );
+
 
 const RangeInput = ({ label, name, value, onChange, max = 5 }: any) => (
   <div className="space-y-3">
@@ -21,7 +22,8 @@ const RangeInput = ({ label, name, value, onChange, max = 5 }: any) => (
       <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-lg text-xs font-black">{value} / {max}</span>
     </div>
     <input type="range" name={name} min="1" max={max} value={value} onChange={onChange}
-      className="w-full h-2 bg-slate-100 rounded-full appearance-none cursor-pointer accent-blue-600" />
+      className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary" />
+
   </div>
 );
 
@@ -77,7 +79,8 @@ const PredictGPA = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50 py-12 px-4 selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen bg-background py-12 px-4 selection:bg-primary/20 selection:text-foreground transition-colors duration-300">
+
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row gap-8 items-start">
 
@@ -88,11 +91,13 @@ const PredictGPA = () => {
                 <BrainCircuit className="w-5 h-5" />
                 <span className="text-xs font-black uppercase tracking-widest">AI GPA Forecaster</span>
               </div>
-              <h1 className="text-4xl lg:text-6xl font-black text-slate-900 tracking-tight leading-none">Predict Your Academic Future</h1>
-              <p className="text-lg text-slate-500 font-medium max-w-lg">Enter your marks and let the <span className="text-blue-600 font-bold italic">EduVantage AI Precision Engine</span> analyze your trajectory with advanced behavioral analytics.</p>
+              <h1 className="text-4xl lg:text-6xl font-black text-foreground tracking-tight leading-none">Predict Your Academic Future</h1>
+              <p className="text-lg text-muted-foreground font-medium max-w-lg">Enter your marks and let the <span className="text-primary font-bold italic">EduVantage AI Precision Engine</span> analyze your trajectory with advanced behavioral analytics.</p>
             </header>
 
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-2xl shadow-slate-200/50 space-y-10">
+
+            <form onSubmit={handleSubmit} className="bg-card p-8 rounded-[2rem] border border-border shadow-2xl shadow-primary/5 space-y-10">
+
 
               {/* Subjects Section */}
               <section className="space-y-6">
@@ -127,7 +132,8 @@ const PredictGPA = () => {
                     <div>
                       <Label>SES Quartile (1-4)</Label>
                       <select name="ses_quartile" value={form.ses_quartile} onChange={handleChange}
-                        className="w-full px-4 py-3 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl outline-none font-semibold text-slate-800 appearance-none">
+                        className="w-full px-4 py-3 bg-muted border-2 border-transparent focus:border-primary focus:bg-card rounded-2xl outline-none font-semibold text-foreground appearance-none">
+
                         <option value="1">1 (Lower)</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -168,9 +174,10 @@ const PredictGPA = () => {
           {/* Right Side: Result Card */}
           <div className="w-full md:w-80 lg:w-96 sticky top-12">
             {!result && !error && (
-              <div className="bg-white p-8 rounded-[2rem] border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center space-y-4 min-h-[400px]">
-                <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-300"><TrendingUp className="w-8 h-8" /></div>
-                <h3 className="text-lg font-black text-slate-600">No Prediction Yet</h3>
+              <div className="bg-card p-8 rounded-[2rem] border-2 border-dashed border-border flex flex-col items-center justify-center text-center space-y-4 min-h-[400px]">
+                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-muted-foreground"><TrendingUp className="w-8 h-8" /></div>
+                <h3 className="text-lg font-black text-muted-foreground">No Prediction Yet</h3>
+
                 <p className="text-slate-400 text-sm font-medium">Complete the form and click the button to see your predicted performance.</p>
               </div>
             )}
@@ -184,7 +191,8 @@ const PredictGPA = () => {
 
             {result && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="bg-white overflow-hidden rounded-[2.5rem] border border-slate-100 shadow-2xl shadow-blue-500/10 transition-all">
+                <div className="bg-card overflow-hidden rounded-[2.5rem] border border-border shadow-2xl shadow-primary/10 transition-all">
+
                   <div className={`p-8 ${result.category === 'High' ? 'bg-emerald-500' : result.category === 'Medium' ? 'bg-blue-500' : 'bg-rose-500'} text-white text-center space-y-2`}>
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-[10px] font-black uppercase tracking-tighter">AI Prediction Verified</div>
                     <div className="text-6xl font-black tracking-tighter">{result.predicted_gpa}</div>
@@ -198,25 +206,22 @@ const PredictGPA = () => {
                       </div>
                     </div>
 
-                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
-                      <div className="flex items-center gap-2 text-slate-800 font-black text-sm">
-                        <Sparkles className="w-4 h-4 text-blue-600" />
+                    <div className="p-4 bg-muted rounded-2xl border border-border space-y-2">
+                      <div className="flex items-center gap-2 text-foreground font-black text-sm">
+                        <Sparkles className="w-4 h-4 text-primary" />
                         <span>AI Intelligence Note</span>
                       </div>
-                      <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                        {result.category === 'High'
-                          ? "Excellent! Your habits and scores indicate a strong academic trajectory. Keep maintaining this consistency."
-                          : result.category === 'Medium'
-                            ? "You're doing well! Focusing slightly more on attendance and core subjects could push you into the high category."
-                            : "The AI identifies some risk areas. Consider increasing study hours and seeking extra support in weak subjects."}
+                      <p className="text-xs text-muted-foreground font-medium leading-relaxed">
+...
                       </p>
                     </div>
 
                     <div className="pt-2">
-                      <button onClick={() => window.print()} className="w-full py-4 border-2 border-slate-100 rounded-2xl text-slate-500 font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">
+                      <button onClick={() => window.print()} className="w-full py-4 border-2 border-border rounded-2xl text-muted-foreground font-black text-xs uppercase tracking-widest hover:bg-muted transition-all">
                         Download Report
                       </button>
                     </div>
+
                   </div>
                 </div>
               </div>

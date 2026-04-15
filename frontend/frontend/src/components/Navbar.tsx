@@ -76,7 +76,10 @@ const Navbar = () => {
         <div className="flex items-center justify-between gap-8 h-16">
           
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group shrink-0">
+          <Link 
+            to={user ? (user.role === 'teacher' ? '/dashboard' : '/student/dashboard') : '/'} 
+            className="flex items-center gap-2 group shrink-0"
+          >
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
               <Brain className="text-primary-foreground w-6 h-6" />
             </div>
@@ -84,6 +87,7 @@ const Navbar = () => {
               EduVantage <span className="text-primary">AI</span>
             </span>
           </Link>
+
 
           {/* Right-aligned Desktop Nav Links (Global) */}
           <div className="hidden lg:flex flex-1 items-center justify-end gap-6 text-foreground">
