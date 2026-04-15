@@ -69,10 +69,11 @@ const registerUser = async (req, res) => {
     } catch (emailError) {
       console.error('Email sending failed:', emailError);
       res.status(201).json({ 
-        message: 'Registration successful, but verification email failed to send. Please contact support.',
+        message: `Registration successful, but email failed: ${emailError.message}. Please check your configuration.`,
         user 
       });
     }
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error', debug: error.message });
@@ -192,8 +193,9 @@ const resendVerification = async (req, res) => {
     res.json({ message: 'Verification email has been re-sent successfully.' });
   } catch (error) {
     console.error('Error resending verification email:', error);
-    res.status(500).json({ message: 'Error sending verification email', debug: error.message });
+    res.status(500).json({ message: 'Error sending verification email', error: error.message });
   }
+
 };
 
 const forgotPassword = async (req, res) => {
@@ -241,8 +243,9 @@ const forgotPassword = async (req, res) => {
     res.json({ message: 'Password reset link sent to your email.' });
   } catch (error) {
     console.error('Forgot Password Error:', error);
-    res.status(500).json({ message: 'Error sending reset email' });
+    res.status(500).json({ message: `Failed to send reset email: ${error.message}` });
   }
+
 };
 
 const resetPassword = async (req, res) => {
