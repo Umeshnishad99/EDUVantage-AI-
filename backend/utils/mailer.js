@@ -4,13 +4,17 @@ const sendEmail = async (options) => {
   try {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
-      port: 587,
-      secure: false, // true for port 465, false for other ports (STARTTLS)
+      port: 465,
+      secure: true, // true for port 465 (SMTPS)
       auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_PASS,
       },
+      connectionTimeout: 10000, // 10 seconds
+      greetingTimeout: 5000,
+      socketTimeout: 15000, // 15 seconds
     });
+
 
     const mailOptions = {
       from: `"EduVantage AI" <${process.env.GMAIL_USER}>`,
