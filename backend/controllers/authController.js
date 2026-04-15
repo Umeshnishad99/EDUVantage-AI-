@@ -2,7 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { query } = require('../config/db');
-const sendEmail = require('../utils/mailer');
+const sendEmail = require('../utils/resendMailer');
+
 
 const registerUser = async (req, res) => {
   let { name, email, password, role } = req.body;
