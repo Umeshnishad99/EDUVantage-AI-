@@ -1,7 +1,8 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { query } = require('../config/db');
 
-const genAI = new GoogleGenerativeAI((process.env.GEMINI_API_KEY || '').trim());
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+
 
 
 const SYSTEM_INSTRUCTION = `You are EduBot, an intelligent and friendly academic advisor for the EduVantage AI platform. 
@@ -38,9 +39,10 @@ const chat = async (req, res) => {
     }
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash',
       systemInstruction: SYSTEM_INSTRUCTION,
     });
+
 
 
 
