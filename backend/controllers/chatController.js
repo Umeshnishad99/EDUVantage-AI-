@@ -37,10 +37,17 @@ const chat = async (req, res) => {
       });
     }
 
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      systemInstruction: SYSTEM_INSTRUCTION,
-    });
+    let model;
+    try {
+      model = genAI.getGenerativeModel({
+        model: 'gemini-1.5-flash',
+        systemInstruction: SYSTEM_INSTRUCTION,
+      });
+    } catch (e) {
+      console.warn('⚠️ Gemini 1.5 Flash failed, falling back to Gemini Pro');
+      model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    }
+
 
     const formattedHistory = history
       .filter(h => h.role && h.content)
@@ -49,8 +56,21 @@ const chat = async (req, res) => {
         parts: [{ text: h.content }],
       }));
 
-    const chatSession = model.startChat({ history: formattedHistory });
-    const result = await chatSession.sendMessage(message);
+    let result;
+    try {
+      const chatSession = model.startChat({ history: formattedHistory });
+      result = await chatSession.sendMessage(message);
+    } catch (chatErr) {
+      if (chatErr.message.includes('404')) {
+        console.warn('🔄 Primary model 404 error, retrying with gemini-pro...');
+        const fallbackModel = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        const fallbackSession = fallbackModel.startChat({ history: formattedHistory });
+        result = await fallbackSession.sendMessage(message);
+      } else {
+        throw chatErr;
+      }
+    }
+    
     const reply = result.response.text();
 
     if (req.user?.id) {
@@ -59,6 +79,7 @@ const chat = async (req, res) => {
         [req.user.id, 'model', reply]
       ).catch(() => {});
     }
+
 
     res.json({ reply });
   } catch (err) {
