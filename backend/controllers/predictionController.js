@@ -1,6 +1,3 @@
-// FIX #7 — Renamed typo: predictSTudentPerformance → predictStudentPerformance
-// FIX #3 — attendance_rate sent as 0-100 to ML API (main.py divides to 0-1 internally)
-
 const axios = require('axios');
 
 const safeNum = (val, def = 0) => {

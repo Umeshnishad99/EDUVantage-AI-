@@ -1,8 +1,5 @@
 const jwt = require('jsonwebtoken');
 
-// FIX #6 — Original code called next() then fell through to the `if (!token)` check,
-// causing "Cannot set headers after they are sent" double-response on valid requests.
-// Fixed with explicit return statements.
 const protect = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
