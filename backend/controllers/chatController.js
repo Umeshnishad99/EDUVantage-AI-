@@ -37,9 +37,9 @@ const chat = async (req, res) => {
     }
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      systemInstruction: SYSTEM_INSTRUCTION,
+      model: 'gemini-pro',
     });
+
 
 
     // Build chat history in Gemini format
