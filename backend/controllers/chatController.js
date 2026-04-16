@@ -39,13 +39,9 @@ const chat = async (req, res) => {
     }
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-1.5-flash',
       systemInstruction: SYSTEM_INSTRUCTION,
     });
-
-
-
-
 
     // Build chat history in Gemini format
     const formattedHistory = history
@@ -69,9 +65,14 @@ const chat = async (req, res) => {
 
     res.json({ reply });
   } catch (err) {
-    console.error('❌ Chat error:', err.message);
-    res.status(500).json({ message: 'Chat service error. Please try again.', error: err.message });
+    console.error('❌ Chat error details:', err);
+    res.status(500).json({ 
+      message: 'Chat service error.', 
+      error: err.message,
+      suggestion: 'Check if your GEMINI_API_KEY is valid and supports gemini-1.5-flash.'
+    });
   }
+
 };
 
 // GET /api/chat/history  (recent 50 messages for logged-in user)
