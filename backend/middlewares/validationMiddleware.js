@@ -6,7 +6,7 @@ const validatePerformance = [
   body('parental_education').notEmpty().withMessage('Parental education is required'),
   body('school_type').isIn(['Public', 'Private']).withMessage('School type must be Public or Private'),
   
-  // Subject Marks (0-99 as requested)
+
   body('math').isInt({ min: 0, max: 99 }).withMessage('Math marks must be between 0 and 99'),
   body('english').isInt({ min: 0, max: 99 }).withMessage('English marks must be between 0 and 99'),
   body('computer').isInt({ min: 0, max: 99 }).withMessage('Computer marks must be between 0 and 99'),
