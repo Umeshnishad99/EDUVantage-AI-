@@ -12,11 +12,24 @@ const { query } = require('./config/db');
 async function bootstrapDB() {
   try {
     console.log('🔄 Checking Database Schema...');
+    // 1. Users Table update
     await query(`
       ALTER TABLE users 
       ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255),
       ADD COLUMN IF NOT EXISTS reset_token_expiry TIMESTAMP;
     `);
+
+    // 2. Chat History Table create
+    await query(`
+      CREATE TABLE IF NOT EXISTS chat_history (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        role VARCHAR(20) NOT NULL,
+        content TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     console.log('✅ Database Schema is up to date.');
   } catch (err) {
     console.error('❌ Database Bootstrap Failed:', err.message);
