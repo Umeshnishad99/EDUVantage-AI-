@@ -92,14 +92,6 @@ const loginUser = async (req, res) => {
 
     const user = result.rows[0];
 
-    // Check if verified (unless skip enabled) - REMOVED TO PREVENT 401 ERRORS AS REQUESTED
-    /*
-    if (!user.is_verified && process.env.SKIP_VERIFICATION !== 'true') {
-      return res.status(401).json({ message: 'Please verify your email address before logging in.' });
-    }
-    */
-
-
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
@@ -108,6 +100,7 @@ const loginUser = async (req, res) => {
     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '30d',
     });
+
 
     res.json({
       user: { id: user.id, name: user.name, email: user.email, role: user.role },

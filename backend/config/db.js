@@ -1,7 +1,6 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-// Use DATABASE_URL if available (for Neon/Production), otherwise use individual variables
 const connectionString = process.env.DATABASE_URL;
 
 const pool = new Pool({
@@ -14,25 +13,18 @@ const pool = new Pool({
   ssl: connectionString ? { rejectUnauthorized: false } : false
 });
 
-// Diagnostic check (Safe to run without top-level await)
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
-    console.error(' DB Test Connection Failed!');
-    console.error('   Error Code:', err.code);
-    console.error('   Error Message:', err.message);
-    console.error('   DATABASE_URL status:', connectionString ? 'PRESENT' : 'MISSING');
+    console.error('❌ DB connection failed:', err.message);
   } else {
-    // Log connection details (safely)
-    const dbInfo = connectionString ? 'Remote (Neon)' : `${process.env.DB_NAME} on ${process.env.DB_HOST}`;
-    console.log(`✅ DB Connected: ${dbInfo}`);
-    console.log('✅ Server Time:', res.rows[0].now);
+    console.log(`✅ DB Connected: ${connectionString ? 'Remote (Neon)' : 'Local'}`);
   }
 });
 
 pool.on('error', (err) => {
-  console.error('❌ Unexpected error on idle PostgreSQL client', err);
-  process.exit(-1);
+  console.error('❌ Database error:', err);
 });
+
 
 module.exports = {
   query: (text, params) => pool.query(text, params),

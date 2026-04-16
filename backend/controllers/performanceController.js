@@ -72,9 +72,7 @@ const submitPerformance = async (req, res) => {
       perfParams
     );
     const performanceId = perfResult.rows[0].id;
-    console.log('✅ student_performance saved. ID =', performanceId);
 
-    // ── STEP 2: Call ML API ──────────────────────────────────────
     let mlApiUrl = (process.env.ML_API_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '');
     let pred = {
       predicted_score: 0, 
@@ -89,12 +87,11 @@ const submitPerformance = async (req, res) => {
     try {
       const mlBody = {
         math, english, computer, physics, chemistry, biology,
-        attendance_rate: attendance * 100, // ML expects percentage (0-100)
+        attendance_rate: attendance * 100,
         study_hours, parent_support, free_time, go_out,
         internet_access, extracurricular, part_time_job, ses_quartile
       };
 
-      console.log('🤖 CALLING ML API:', `${mlApiUrl}/predict`);
       const mlRes = await fetch(`${mlApiUrl}/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -109,14 +106,11 @@ const submitPerformance = async (req, res) => {
         pred.weak_areas      = mlData.weak_areas    || [];
         pred.recommendations = mlData.recommendations || '';
         pred.roadmap         = mlData.roadmap       || [];
-      } else {
-        console.error('❌ ML API Error:', await mlRes.text());
       }
     } catch (mlErr) {
-      console.error('❌ ML API Connection Failed:', mlErr.message);
+      console.error('ML API Connection Failed:', mlErr.message);
     }
 
-    // ── STEP 3: Save prediction ──────────────────────────────────
     const predParams = [
       req.user.id, performanceId, pred.predicted_score, pred.gpa, pred.category,
       pred.confidence_score, JSON.stringify(pred.recommendations),
@@ -138,9 +132,10 @@ const submitPerformance = async (req, res) => {
     });
 
   } catch (criticalErr) {
-    console.error('🔥 CRITICAL ERROR [submitPerformance]:', criticalErr);
+    console.error('Error [submitPerformance]:', criticalErr);
     return res.status(500).json({ message: 'Internal Server Error' });
   }
+
 };
 
 // @desc  Get logged-in student's latest performance + prediction

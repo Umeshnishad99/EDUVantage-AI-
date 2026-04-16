@@ -24,12 +24,11 @@ const chat = async (req, res) => {
   }
 
   try {
-    // Persist user message to DB (if user is authenticated)
     if (req.user?.id) {
       await query(
         'INSERT INTO chat_history (user_id, role, content) VALUES ($1,$2,$3)',
         [req.user.id, 'user', message]
-      ).catch(() => {}); // non-critical — don't fail the chat if DB write fails
+      ).catch(() => {});
     }
 
     if (!process.env.GEMINI_API_KEY) {
@@ -43,7 +42,6 @@ const chat = async (req, res) => {
       systemInstruction: SYSTEM_INSTRUCTION,
     });
 
-    // Build chat history in Gemini format
     const formattedHistory = history
       .filter(h => h.role && h.content)
       .map(h => ({
@@ -55,7 +53,6 @@ const chat = async (req, res) => {
     const result = await chatSession.sendMessage(message);
     const reply = result.response.text();
 
-    // Persist assistant reply
     if (req.user?.id) {
       await query(
         'INSERT INTO chat_history (user_id, role, content) VALUES ($1,$2,$3)',
@@ -72,8 +69,8 @@ const chat = async (req, res) => {
       suggestion: 'Check if your GEMINI_API_KEY is valid and supports gemini-1.5-flash.'
     });
   }
-
 };
+
 
 // GET /api/chat/history  (recent 50 messages for logged-in user)
 const getChatHistory = async (req, res) => {
