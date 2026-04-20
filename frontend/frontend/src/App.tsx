@@ -18,6 +18,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import ChatbotWidget from './components/ChatbotWidget';
+import { Analytics } from '@vercel/analytics/react';
 
 
 function App() {
@@ -73,6 +74,7 @@ function App() {
               </Routes>
             </div>
             <ChatbotWidget />
+            <Analytics />
           </div>
         </Router>
       </AuthProvider>
